@@ -5,6 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve --no-browser",
     "build": "vue-cli-service build",
+    "cap": "cap",
+    "build:ios": "vue-cli-service build && npm run cap sync ios",
+    "build:android": "vue-cli-service build && npm run cap sync android",
+    "build:native": "vue-cli-service build && npm run cap sync",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint"

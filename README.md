@@ -14,6 +14,11 @@ npx cap sync
 <docgen-index>
 
 * [`echo(...)`](#echo)
+* [`create(...)`](#create)
+* [`hide()`](#hide)
+* [`show()`](#show)
+* [`dismiss()`](#dismiss)
+* [Interfaces](#interfaces)
 
 </docgen-index>
 
@@ -33,5 +38,76 @@ echo(options: { value: string; }) => Promise<{ value: string; }>
 **Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
 
 --------------------
+
+
+### create(...)
+
+```typescript
+create(options: EmbeddedWebviewOptions) => Promise<void>
+```
+
+| Param         | Type                                                                      |
+| ------------- | ------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#embeddedwebviewoptions">EmbeddedWebviewOptions</a></code> |
+
+--------------------
+
+
+### hide()
+
+```typescript
+hide() => Promise<EmbeddedWebviewVisibility>
+```
+
+**Returns:** <code>Promise&lt;<a href="#embeddedwebviewvisibility">EmbeddedWebviewVisibility</a>&gt;</code>
+
+--------------------
+
+
+### show()
+
+```typescript
+show() => Promise<EmbeddedWebviewVisibility>
+```
+
+**Returns:** <code>Promise&lt;<a href="#embeddedwebviewvisibility">EmbeddedWebviewVisibility</a>&gt;</code>
+
+--------------------
+
+
+### dismiss()
+
+```typescript
+dismiss() => Promise<void>
+```
+
+--------------------
+
+
+### Interfaces
+
+
+#### EmbeddedWebviewOptions
+
+| Prop                       | Type                                                                  |
+| -------------------------- | --------------------------------------------------------------------- |
+| **`url`**                  | <code>string</code>                                                   |
+| **`webviewConfiguration`** | <code><a href="#webviewconfiguration">WebviewConfiguration</a></code> |
+
+
+#### WebviewConfiguration
+
+| Prop               | Type                 |
+| ------------------ | -------------------- |
+| **`width`**        | <code>number</code>  |
+| **`height`**       | <code>number</code>  |
+| **`enableCookie`** | <code>boolean</code> |
+
+
+#### EmbeddedWebviewVisibility
+
+| Prop             | Type                 |
+| ---------------- | -------------------- |
+| **`visibility`** | <code>boolean</code> |
 
 </docgen-api>
