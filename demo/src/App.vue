@@ -13,6 +13,9 @@ export default defineComponent({
   components: {
     IonApp,
     IonRouterOutlet
+  },
+  mounted () {
+    console.log('mounted App')
   }
 });
 </script>
