@@ -36,12 +36,16 @@ class EmbeddedWebviewPlugin : Plugin() {
             return
         }
 
+
+
+
         fun createWebView(url: String): WebView {
             val webView = WebView(getBridge().context)
 
             val displayMetrics = Resources.getSystem().displayMetrics
-            val width = displayMetrics.widthPixels
-            val height = displayMetrics.heightPixels - (80 * displayMetrics.density)
+            val layoutJSParams = call.getObject("webviewConfiguration")
+            val width = layoutJSParams.getInt("width") * displayMetrics.density
+            val height = layoutJSParams.getInt("height") * displayMetrics.density
             val viewLayoutParams = LinearLayout.LayoutParams(width.toInt(), height.toInt())
             webView.layoutParams = viewLayoutParams
 

@@ -30,8 +30,14 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
             self.embeddedWebview = EmbeddedWebview(url: url)
             
             capWebview.addSubview(self.embeddedWebview.view)
+            
+            guard let webviewConfig = call.getObject("webviewConfiguration") else { return }
+            let width: Int = webviewConfig["width"] as! Int
+            let height: Int = webviewConfig["height"] as! Int
+            let frame = CGRect(x: 0, y: 0, width: width, height: height)
+            
             // FIXME: insert canOpenUrl()
-            self.embeddedWebview.create(url: "https://twogate.com")
+            self.embeddedWebview.create(url: url, frame: frame)
         }
     }
     

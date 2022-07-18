@@ -3,12 +3,6 @@ import Capacitor
 import WebKit
 
 @objc class EmbeddedWebview: UIViewController, WKNavigationDelegate, WKUIDelegate {
-    private func deviceRect(x: CGFloat, y: CGFloat) -> CGRect {
-        let width = UIScreen.main.bounds.width
-        let height = UIScreen.main.bounds.height
-        return CGRect(x: x, y: y, width: width, height: height - 84)
-    }
-    
     private var url: URL!
     private var css: String?
     private var webView: WKWebView!
@@ -27,7 +21,7 @@ import WebKit
     
     override func loadView() {
         let webConfiguration = WKWebViewConfiguration()
-        let frame = deviceRect(x: 0, y: 0)
+        let frame = CGRect(x: 0, y: 0, width: 0, height: 0)
         webView = WKWebView(frame: frame, configuration: webConfiguration)
         webView.uiDelegate = self
         view = webView
@@ -49,9 +43,10 @@ import WebKit
        return nil
     }
     
-    public func create(url: String) {
+    public func create(url: String, frame: CGRect) {
         let URL = URL(string:url)
         let request = URLRequest(url: URL!)
+        webView.frame = frame
         webView.load(request)
     }
 

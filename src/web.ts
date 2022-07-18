@@ -26,7 +26,7 @@ export class EmbeddedWebviewWeb
 
   async hide(): Promise<EmbeddedWebviewVisibility> {
     console.log('HIDE WEBVIEW');
-    return { visibility: false }
+    return { visibility: false };
   }
 
   async dismiss(): Promise<void> {
