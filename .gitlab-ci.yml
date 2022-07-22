@@ -1,0 +1,51 @@
+image: node:lts
+
+cache:
+  key: "$CI_PIPELINE_ID"
+  paths:
+    - node_modules
+
+stages:
+  - prepare
+  - verify
+  - build
+  - deploy
+
+npm-install:
+  stage: prepare
+  script:
+    - npm install
+
+.verify:
+  stage: verify
+  script:
+    - npm verify:${BUILD_PLATFORM}
+verify-ios:
+  extends: .verify
+  environment:
+    BUILD_PLATFORM: ios
+verify-android:
+  extends: .verify
+  environment:
+    BUILD_PLATFORM: android
+
+
+
+build:
+  stage: build
+  script:
+    - npm run build
+  only:
+    - main
+    - tags
+  artifacts:
+    expire_in: 4h
+    paths:
+      - dist
+
+deploy:
+  stage: deploy
+  script:
+    - npm publish
+  only:
+    - tags
