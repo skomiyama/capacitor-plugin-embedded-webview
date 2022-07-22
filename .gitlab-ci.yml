@@ -21,10 +21,14 @@ npm-install:
   script: 
     - "npm run verify:${BUILD_PLATFORM}"
 verify-ios:
+  tags:
+    - macOS
+    - XCode=13
   extends: .verify
   variables:
     BUILD_PLATFORM: ios
 verify-android:
+  image: containers.l.twogate.net/docker/capacitor-android:sdk30-gradle7
   extends: .verify
   variables:
     BUILD_PLATFORM: android
