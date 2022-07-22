@@ -19,14 +19,14 @@ npm-install:
 .verify:
   stage: verify
   script: 
-    - npm verify:${BUILD_PLATFORM}
+    - "npm run verify:${BUILD_PLATFORM}"
 verify-ios:
   extends: .verify
-  environment:
+  variables:
     BUILD_PLATFORM: ios
 verify-android:
   extends: .verify
-  environment:
+  variables:
     BUILD_PLATFORM: android
 
 
