@@ -26,14 +26,6 @@ import ExploreContainer from '@/components/ExploreContainer.vue';
 export default defineComponent({
   name: 'Tab2Page',
   components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
-  beforeMount() {
-    const url = 'https://twogate.com';
-    // const options: EmbeddedWebviewOptions = {
-    //   url,
-    //   webviewConfiguration {}
-    // }
-    // EmbeddedWebview.create();
-  },
   async mounted() {
     const options: EmbeddedWebviewOptions = {
       url: 'https://twogate.com',

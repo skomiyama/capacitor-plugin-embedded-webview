@@ -8,8 +8,7 @@ import Capacitor
 @objc(EmbeddedWebviewPlugin)
 public class EmbeddedWebviewPlugin: CAPPlugin {
     private var embeddedWebview: EmbeddedWebview!
-    var customWebview: WKWebView?
-    
+
     @objc func echo(_ call: CAPPluginCall) {
         let value = call.getString("value") ?? ""
         call.resolve(["value": value])
@@ -38,11 +37,16 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
             
             // FIXME: insert canOpenUrl()
             self.embeddedWebview.create(url: url, frame: frame)
+            call.resolve()
         }
     }
     
     @objc func destroy(_ call:CAPPluginCall) -> Void {
         DispatchQueue.main.async {
+            guard (self.embeddedWebview != nil) else {
+                call.resolve()
+                return
+            }
             self.embeddedWebview.dismiss(animated: false)
             call.resolve()
         }
@@ -50,6 +54,10 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
     
     @objc func show(_ call: CAPPluginCall) -> Void {
         DispatchQueue.main.async {
+            guard (self.embeddedWebview != nil) else {
+                call.resolve()
+                return
+            }
             self.embeddedWebview.show()
             call.resolve(["visibility": true])
         }
@@ -57,6 +65,10 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
 
     @objc func hide(_ call: CAPPluginCall) -> Void {
         DispatchQueue.main.async {
+            guard (self.embeddedWebview != nil) else {
+                call.resolve()
+                return
+            }
             self.embeddedWebview.hide()
             call.resolve(["visibility": false])
         }
