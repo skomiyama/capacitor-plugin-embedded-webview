@@ -18,7 +18,7 @@ npm-install:
 
 .verify:
   stage: verify
-  script:
+  script: 
     - npm verify:${BUILD_PLATFORM}
 verify-ios:
   extends: .verify
@@ -36,7 +36,7 @@ build:
   script:
     - npm run build
   only:
-    - main
+    - gitlab/main
     - tags
   artifacts:
     expire_in: 4h
@@ -48,4 +48,5 @@ deploy:
   script:
     - npm publish
   only:
+    - gitlab/main
     - tags
