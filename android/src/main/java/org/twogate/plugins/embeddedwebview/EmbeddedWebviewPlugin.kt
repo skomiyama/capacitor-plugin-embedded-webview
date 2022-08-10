@@ -1,10 +1,12 @@
 package org.twogate.plugins.embeddedwebview
 
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.widget.LinearLayout
+import org.json.JSONObject
 
 import com.getcapacitor.annotation.CapacitorPlugin
 import com.getcapacitor.PluginMethod
@@ -17,7 +19,6 @@ import org.twogate.plugins.embeddedwebview.EmbeddedWebview
 @CapacitorPlugin(name = "EmbeddedWebview")
 class EmbeddedWebviewPlugin : Plugin() {
     private lateinit var webView: WebView
-    private val implementation = EmbeddedWebview()
 
     @PluginMethod
     fun echo(call: PluginCall) {
@@ -32,37 +33,28 @@ class EmbeddedWebviewPlugin : Plugin() {
     fun create(call: PluginCall) {
         val url = call.getString("url")
         if (url == null) {
-            call.reject("url is undefined")
+            call.reject("url is undefined.")
             return
         }
 
+        val rawConfiguration = call.getObject("configuration")
+        if (rawConfiguration == null) {
+            call.reject("configuration is undefined.")
+            return
+        }
 
-
-
-        fun createWebView(url: String): WebView {
-            val webView = WebView(getBridge().context)
-
-            val displayMetrics = Resources.getSystem().displayMetrics
-            val layoutJSParams = call.getObject("webviewConfiguration")
-            val width = layoutJSParams.getInt("width") * displayMetrics.density
-            val height = layoutJSParams.getInt("height") * displayMetrics.density
-            val viewLayoutParams = LinearLayout.LayoutParams(width.toInt(), height.toInt())
-            webView.layoutParams = viewLayoutParams
-
-            webView.settings.domStorageEnabled = true
-            webView.settings.javaScriptEnabled = true
-            webView.settings.javaScriptCanOpenWindowsAutomatically = true
-
-            webView.webViewClient = EmbeddedWebviewClient()
-
-            webView.loadUrl(url)
-
-            return webView
+        val configuration: EmbeddedWebViewConfiguration = try {
+            EmbeddedWebViewConfiguration(rawConfiguration)
+        } catch(exception: Exception) {
+            call.reject(exception.message)
+            return
         }
 
         activity.runOnUiThread(Runnable {
             // Note: initialize webView here
-            this.webView = createWebView(url)
+            this.webView = EmbeddedWebview(getBridge().context, configuration).webView
+            this.webView.loadUrl(url)
+
             activity.addContentView(this.webView, this.webView.layoutParams)
 
             call.resolve()

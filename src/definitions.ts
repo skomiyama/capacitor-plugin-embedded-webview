@@ -1,12 +1,16 @@
-export interface WebviewConfiguration {
-  width: number;
-  height: number;
+export interface EmbeddedWebviewConfiguration {
+  styles: {
+    width: number;
+    height: number;
+  };
+  global?: { [key: string]: unknown };
   enableCookie?: boolean;
-}
+  css?: string;
+} 
 
 export interface EmbeddedWebviewOptions {
   url: string;
-  webviewConfiguration: WebviewConfiguration;
+  configuration: EmbeddedWebviewConfiguration;
 }
 
 export interface EmbeddedWebviewPlugin {
