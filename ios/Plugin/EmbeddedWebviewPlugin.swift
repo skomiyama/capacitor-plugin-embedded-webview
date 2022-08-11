@@ -1,6 +1,17 @@
 import Foundation
 import Capacitor
 
+public struct EmbeddedWebviewConfigurationStyles {
+    var height: Int;
+    var width: Int;
+}
+
+public struct EmbeddedWebviewConfiguration {
+    var styles: EmbeddedWebviewConfigurationStyles
+    var enableCookie: Bool?
+    var globalVariables: JSObject?
+}
+
 /**
  * Please read the Capacitor iOS Plugin Development Guide
  * here: https://capacitorjs.com/docs/plugins/ios
@@ -12,6 +23,35 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
     @objc func echo(_ call: CAPPluginCall) {
         let value = call.getString("value") ?? ""
         call.resolve(["value": value])
+    }
+    
+    func embeddedWebViewConfiguration(call: CAPPluginCall) -> EmbeddedWebviewConfiguration? {
+        // Fixme following nil check codes. Can I write in struct or class??
+        guard let configuration = call.getObject("configuration") else {
+            call.reject("[EmbeddedWebView] configuration is undefined.")
+            return nil
+        }
+        guard let styles = configuration["styles"] as? JSObject else {
+            call.reject("[EmbeddedWebView] configuration.styles is undefined.")
+            return nil
+        }
+        guard let width = styles["width"] as? Int else {
+            call.reject("[EmbeddedWebView] configuration.styles.width is undefined.")
+            return nil
+        }
+        guard let height = styles["height"] as? Int else {
+            call.reject("[EmbeddedWebView] configuration.styles.height is undefined.")
+            return nil
+        }
+        
+        let enableCookie = configuration["enableCookie"] as? Bool
+        let globalVariables = configuration["global"] as? JSObject
+        
+        return EmbeddedWebviewConfiguration(
+            styles: EmbeddedWebviewConfigurationStyles(height: height, width: width),
+            enableCookie: enableCookie,
+            globalVariables: globalVariables
+        )
     }
     
     @objc func create(_ call: CAPPluginCall) -> Void {
@@ -26,17 +66,17 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
                 return
             }
             
-            self.embeddedWebview = EmbeddedWebview(url: url)
-            
+            guard let configuration = self.embeddedWebViewConfiguration(call: call) else {
+                call.reject("Failed to initialize configuration")
+                return
+            }
+
+            self.embeddedWebview = EmbeddedWebview(url: url, configuration: configuration)
+
             capWebview.addSubview(self.embeddedWebview.view)
-            
-            guard let webviewConfig = call.getObject("webviewConfiguration") else { return }
-            let width: Int = webviewConfig["width"] as! Int
-            let height: Int = webviewConfig["height"] as! Int
-            let frame = CGRect(x: 0, y: 0, width: width, height: height)
-            
+
             // FIXME: insert canOpenUrl()
-            self.embeddedWebview.create(url: url, frame: frame)
+            self.embeddedWebview.create()
             call.resolve()
         }
     }
