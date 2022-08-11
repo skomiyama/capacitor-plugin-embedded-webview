@@ -39,6 +39,7 @@ build:
     - npm run build
   only:
     - gitlab/main
+    - gitlab/rel/0.0.1
     - tags
   artifacts:
     expire_in: 4h
@@ -51,4 +52,5 @@ deploy:
     - npm publish
   only:
     - gitlab/main
+    - gitlab/rel/0.0.1
     - tags
