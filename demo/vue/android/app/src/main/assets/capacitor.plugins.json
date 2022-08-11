@@ -14,9 +14,5 @@
 	{
 		"pkg": "@capacitor/status-bar",
 		"classpath": "com.capacitorjs.plugins.statusbar.StatusBarPlugin"
-	},
-	{
-		"pkg": "@skomiyama/embedded-webview",
-		"classpath": "org.twogate.plugins.embeddedwebview.EmbeddedWebviewPlugin"
 	}
 ]
