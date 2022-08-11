@@ -28,7 +28,7 @@ export default defineComponent({
   components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
   async mounted() {
     const options: EmbeddedWebviewOptions = {
-      url: 'https://twogate.com',
+      url: 'http://localhost:3000',
       webviewConfiguration: {
         width: (this.$el as HTMLElement).clientWidth,
         height: (this.$el as HTMLElement).clientHeight,

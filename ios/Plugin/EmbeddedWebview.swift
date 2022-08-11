@@ -23,6 +23,7 @@ import WebKit
         let webConfiguration = WKWebViewConfiguration()
         let frame = CGRect(x: 0, y: 0, width: 0, height: 0)
         webView = WKWebView(frame: frame, configuration: webConfiguration)
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.uiDelegate = self
         view = webView
     }
