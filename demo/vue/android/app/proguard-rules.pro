@@ -16,16 +16,9 @@
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable
 
--keepattributes RuntimeVisibleAnnotations,AnnotationDefault
-
-# kotlinx-serialization-json specific. Add this if you have java.lang.NoClassDefFoundError kotlinx.serialization.json.JsonObjectSerializer
--keepclassmembers class kotlinx.serialization.json.** {
-    *** Companion;
-}
--keepclasseswithmembers class kotlinx.serialization.json.** {
-    kotlinx.serialization.KSerializer serializer(...);
-}
-
+# If you keep the line number information, uncomment this to
+# hide the original source file name.
+#-renamesourcefileattribute SourceFile
 # Application rules
 
 # Change here com.yourcompany.yourpackage

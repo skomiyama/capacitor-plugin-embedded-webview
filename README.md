@@ -89,19 +89,20 @@ dismiss() => Promise<void>
 
 #### EmbeddedWebviewOptions
 
-| Prop                       | Type                                                                  |
-| -------------------------- | --------------------------------------------------------------------- |
-| **`url`**                  | <code>string</code>                                                   |
-| **`webviewConfiguration`** | <code><a href="#webviewconfiguration">WebviewConfiguration</a></code> |
+| Prop                | Type                                                                                  |
+| ------------------- | ------------------------------------------------------------------------------------- |
+| **`url`**           | <code>string</code>                                                                   |
+| **`configuration`** | <code><a href="#embeddedwebviewconfiguration">EmbeddedWebviewConfiguration</a></code> |
 
 
-#### WebviewConfiguration
+#### EmbeddedWebviewConfiguration
 
-| Prop               | Type                 |
-| ------------------ | -------------------- |
-| **`width`**        | <code>number</code>  |
-| **`height`**       | <code>number</code>  |
-| **`enableCookie`** | <code>boolean</code> |
+| Prop               | Type                                            |
+| ------------------ | ----------------------------------------------- |
+| **`styles`**       | <code>{ width: number; height: number; }</code> |
+| **`global`**       | <code>{ [key: string]: unknown; }</code>        |
+| **`enableCookie`** | <code>boolean</code>                            |
+| **`css`**          | <code>string</code>                             |
 
 
 #### EmbeddedWebviewVisibility

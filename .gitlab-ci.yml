@@ -7,7 +7,7 @@ cache:
 
 stages:
   - prepare
-  - verify
+  # - verify
   - build
   - deploy
 
