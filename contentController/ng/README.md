@@ -24,7 +24,7 @@ export class HomePage {
   actionSheetSelected?: string;
   alertSelected?: string;
 
-  constructor(
+  constructor(  
     private modalCtrl: ModalController,
     private webViewAlertCtrl: WebViewAlert,
     private webViewActionSheetCtrl: WebViewActionSheet,
