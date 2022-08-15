@@ -18,7 +18,7 @@ public struct EmbeddedWebviewConfiguration {
  */
 @objc(EmbeddedWebviewPlugin)
 public class EmbeddedWebviewPlugin: CAPPlugin {
-    private var embeddedWebview: EmbeddedWebview!
+    private var embeddedWebview: EmbeddedWebView!
 
     @objc func echo(_ call: CAPPluginCall) {
         let value = call.getString("value") ?? ""
@@ -71,8 +71,8 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
                 return
             }
 
-            self.embeddedWebview = EmbeddedWebview(url: url, configuration: configuration)
-
+            self.embeddedWebview = EmbeddedWebView(url: url, configuration: configuration)
+            
             capWebview.addSubview(self.embeddedWebview.view)
 
             // FIXME: insert canOpenUrl()
@@ -98,6 +98,7 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
                 call.resolve()
                 return
             }
+            self.bridge?.triggerWindowJSEvent(eventName: "show_embedded_view", data: "{ 'data': 'SHOW_EMBEDDED_VIEW' }")
             self.embeddedWebview.show()
             call.resolve(["visibility": true])
         }
