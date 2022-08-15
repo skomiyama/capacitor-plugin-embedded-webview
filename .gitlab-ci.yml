@@ -50,6 +50,7 @@ build-embedded-webview-controller:
   stage: build
   script:
     - cd ./contentController/ng/
+    - npm install
     - npm run build
     - test -e ./dist
   artifacts:
