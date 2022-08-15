@@ -2,6 +2,10 @@ export interface EmbeddedWebviewConfiguration {
   styles: {
     width: number;
     height: number;
+    theme: {
+      background: string;
+      text: string;
+    }
   };
   global?: { [key: string]: unknown };
   enableCookie?: boolean;
