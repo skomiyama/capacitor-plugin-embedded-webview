@@ -33,7 +33,7 @@ npm-install:
 #   variables:
 #     BUILD_PLATFORM: android
 
-build:
+build-embedded-webview:
   stage: build
   script:
     - npm run build
@@ -46,14 +46,44 @@ build:
     paths:
       - dist
 
-deploy:
+build-embedded-webview-controller:
+  stage: build
+  script:
+    - cd ./contentController/ng/
+    - npm run build
+    - test -e ./dist
+  artifacts:
+    expire_in: 4h
+    paths:
+      - dist
+
+
+deploy-embedded-webview:
   stage: deploy
   script:
     - npm config set -- '@skomiyama:registry' "https://${CI_SERVER_HOST}/api/v4/projects/1260/packages/npm/"
     - npm config set -- '//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken' "${DEPLOY_TOKEN}"
     - npm config set -- '//${CI_SERVER_HOST}/api/v4/projects/1260/packages/npm/:_authToken' "${DEPLOY_TOKEN}"
     - npm publish
+  needs:
+    - build-embedded-webview
   only:
     - gitlab/main
     - gitlab/rel/0.0.1
     - tags
+
+deploy-embedded-webview-controller:
+  stage: deploy
+  script:
+    - cd contentController/ng/dist/content-controller/
+    - npm config set -- '@skomiyama:registry' "https://${CI_SERVER_HOST}/api/v4/projects/1260/packages/npm/"
+    - npm config set -- '//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken' "${DEPLOY_TOKEN}"
+    - npm config set -- '//${CI_SERVER_HOST}/api/v4/projects/1260/packages/npm/:_authToken' "${DEPLOY_TOKEN}"
+    - npm publish
+  needs:
+    - build-embedded-webview-controller
+  only:
+    - gitlab/main
+    - gitlab/rel/0.0.1
+    - tags
+  

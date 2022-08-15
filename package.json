@@ -1,6 +1,6 @@
 {
   "name": "@skomiyama/embedded-webview",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "capacitor plugin embedded webview",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
