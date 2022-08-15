@@ -1,27 +1,122 @@
-# Ng
+## Example 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.2.
+```typescript
+import { Component } from '@angular/core';
+import { ModalController, ModalOptions } from '@ionic/angular';
+import {
+  WebViewAlert,
+  WebViewActionSheet,
+  WebViewModal,
+  OverlayActionStyle,
+  EmbeddedWebViewContentAlertOptions
+} from '@skomiyama/embedded-webview-controller';
 
-## Development server
+import { ModalContentPage } from '../modal-content/modal-content.page';
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+@Component({
+  selector: 'app-home',
+  templateUrl: 'home.page.html',
+  styleUrls: ['home.page.scss'],
+})
+export class HomePage {
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+  actionSheetSelected?: string;
+  alertSelected?: string;
 
-## Build
+  constructor(
+    private modalCtrl: ModalController,
+    private webViewAlertCtrl: WebViewAlert,
+    private webViewActionSheetCtrl: WebViewActionSheet,
+    private webViewModalCtrl: WebViewModal,
+  ) {}
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+  async openActionSheet() {
+    const alertOptions: EmbeddedWebViewContentAlertOptions = {
+      title: 'Alert from embedded content',
+      message: 'message',
+      actions: [
+        {
+          title: 'Button 1',
+          value: 'button1',
+          role: OverlayActionStyle.Default
+        },
+        {
+          title: 'Button 2',
+          value: 'button2',
+          role: OverlayActionStyle.Default
+        },
+        {
+          title: 'Delete',
+          value: 'delete',
+          role: OverlayActionStyle.Destructive,
+        },
+        {
+          title: 'Cancel',
+          value: 'cancel',
+          role: OverlayActionStyle.Cancel
+        }
+      ]
+    };
+    this.webViewActionSheetCtrl.present(alertOptions);
+    this.actionSheetSelected = await this.webViewActionSheetCtrl.onDidDismiss();
+  }
 
-## Running unit tests
+  async openAlert() {
+    const alertOptions: EmbeddedWebViewContentAlertOptions = {
+      title: 'Alert from embedded content',
+      message: 'message',
+      // until two elements.
+      actions: [
+        {
+          title: 'Yes',
+          value: 'yes',
+          role: OverlayActionStyle.Default
+        },
+        {
+          title: 'No',
+          value: 'no',
+          role: OverlayActionStyle.Destructive
+        },
+      ]
+    };
+    this.webViewAlertCtrl.present(alertOptions);
+    this.alertSelected = await this.webViewAlertCtrl.onDidDismiss();
+  }
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+  async openModal() {
+    const options: ModalOptions = {
+      component: ModalContentPage
+    };
+    const modal = await this.modalCtrl.create(options);
+    modal.present();
+    this.webViewModalCtrl.present();
+  }
+}
+```
 
-## Running end-to-end tests
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { WebViewModal } from '@skomiyama/embedded-webview-controller';
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+@Component({
+  selector: 'app-modal-content',
+  templateUrl: './modal-content.page.html',
+  styleUrls: ['./modal-content.page.scss'],
+})
+export class ModalContentPage implements OnInit {
+  constructor(
+    private modalCtrl: ModalController,
+    private webViewModalCtrl: WebViewModal,
+  ) { }
 
-## Further help
+  ngOnInit() {}
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+  async closeModal() {
+    this.webViewModalCtrl.dismiss();
+    this.modalCtrl.dismiss();
+  }
+}
+
+```
