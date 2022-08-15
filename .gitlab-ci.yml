@@ -56,7 +56,7 @@ build-embedded-webview-controller:
   artifacts:
     expire_in: 4h
     paths:
-      - dist
+      - contentController/ng/dist
 
 
 deploy-embedded-webview:
