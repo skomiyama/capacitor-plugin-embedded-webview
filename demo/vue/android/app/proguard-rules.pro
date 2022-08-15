@@ -19,3 +19,25 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+# Application rules
+
+# Change here com.yourcompany.yourpackage
+-keepclassmembers @kotlinx.serialization.Serializable class org.twogate.plugins.embeddedwebview.** {
+    # lookup for plugin generated serializable classes
+    *** Companion;
+    # lookup for serializable objects
+    *** INSTANCE;
+    kotlinx.serialization.KSerializer serializer(...);
+}
+# lookup for plugin generated serializable classes
+-if @kotlinx.serialization.Serializable class org.twogate.plugins.embeddedwebview.**
+-keepclassmembers class org.twogate.plugins.embeddedwebview.<1>$Companion {
+    kotlinx.serialization.KSerializer serializer(...);
+}
+
+# Serialization supports named companions but for such classes it is necessary to add an additional rule.
+# This rule keeps serializer and serializable class from obfuscation. Therefore, it is recommended not to use wildcards in it, but to write rules for each such class.
+-keepattributes InnerClasses # Needed for `getDeclaredClasses`.
+-keep class org.twogate.plugins.embeddedwebview.SerializableClassWithNamedCompanion$$serializer {
+    *** INSTANCE;
+}

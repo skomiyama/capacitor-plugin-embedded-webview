@@ -17,6 +17,6 @@
 	},
 	{
 		"pkg": "@skomiyama/embedded-webview",
-		"classpath": "org.twogate.plugins.embeddedwebview.EmbeddedWebviewPlugin"
+		"classpath": "org.twogate.plugins.embeddedwebview.EmbeddedWebViewPlugin"
 	}
 ]
