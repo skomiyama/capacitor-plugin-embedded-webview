@@ -20,7 +20,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import { EmbeddedWebView, EmbeddedWebviewOptions, EmbeddedWebviewConfiguration } from '@skomiyama/embedded-webview';
+import {
+  EmbeddedWebView,
+  EmbeddedWebviewOptions,
+  EmbeddedWebviewConfiguration,
+  EmbeddedWebviewUIControllerTheme
+  } from '@skomiyama/embedded-webview';
 
 import ExploreContainer from '@/components/ExploreContainer.vue';
 
@@ -34,10 +39,32 @@ export default defineComponent({
   // },
   components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
   async mounted() {
+    const theme: EmbeddedWebviewUIControllerTheme = {
+      view: {
+        background: '#121212',
+        text: '#ffffff',
+      },
+      action: {
+        cancel: {
+          background: '#242424',
+          text: '#ffffff'
+        },
+        default: {
+          background: '#222222',
+          text: '#ffffff'
+        },
+        destructive: {
+          background: '#ff0000',
+          text: '#ff000'
+        }
+      }
+    }
+    
     const configuration: EmbeddedWebviewConfiguration = {
       styles: {
         width: (this.$el as HTMLElement).clientWidth,
-        height: ((this.$el as HTMLElement).clientHeight)
+        height: ((this.$el as HTMLElement).clientHeight),
+        theme
       },
       global: {
         parent: {
@@ -48,7 +75,7 @@ export default defineComponent({
     }
     const options: EmbeddedWebviewOptions = {
       // url: 'http://localhost:3000',
-      url: 'https://85bf-2409-10-2500-3700-705a-6e07-9063-1c0d.jp.ngrok.io',
+      url: 'https://fd47-2409-10-2500-3700-c4e2-483a-6942-dc54.jp.ngrok.io',
       configuration
     }
     await EmbeddedWebView.create(options);

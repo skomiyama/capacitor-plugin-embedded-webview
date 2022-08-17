@@ -11,16 +11,17 @@ struct EmbeddedWebViewContentAlertOptions: Decodable {
     let title: String?
     let message: String?
     let style: Int
+    let theme: EmbeddedWebViewUIControllerTheme.Theme
     let name: String
     let actions: [EmbeddedWebViewContentAlertAction]
 }
-
 
 @objc class EmbeddedWebView: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate {
     private var url: URL!
     private var webViewConfiguration: WKWebViewConfiguration!
     private var webViewFrame: CGRect!
     private var webView: WKWebView!
+
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         let body = String(describing: message.body)
         let jsonData = body.data(using: .utf8)
@@ -35,17 +36,7 @@ struct EmbeddedWebViewContentAlertOptions: Decodable {
             break
         case "showActionSheet", "showAlert":
             if let options = try? JSONDecoder().decode(EmbeddedWebViewContentAlertOptions.self, from: jsonData!) {
-                let alert = UIAlertController(title: options.title, message: options.message, preferredStyle: UIAlertController.Style(rawValue: options.style) ?? .alert)
-                for action in options.actions {
-                    alert.addAction(
-                        UIAlertAction(title: action.title, style: UIAlertAction.Style(rawValue: action.role) ?? .default, handler: { _ in
-                            let script = """
-                            window.dispatchEvent(new CustomEvent('on_did_dismiss_\(options.name)', { detail: '\(action.value)' }));
-                            """
-                            self.webView.evaluateJavaScript(script)
-                        })
-                    )
-                }
+                let alert = createAlert(webView: self.webView, options: options)
                 self.present(alert, animated: true)
             }
             break
