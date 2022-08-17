@@ -1,11 +1,28 @@
+
+export interface EmbeddedWebViewUIControllerTheme {
+  view: {
+    background: string;
+    text: string;
+  };
+  action: {
+    cancel: {
+      background: string;
+      text: string;
+    },
+    destructive: {
+      text: string;
+    },
+    default: {
+      text: string;
+    }
+  }
+}
+
 export interface EmbeddedWebviewConfiguration {
   styles: {
     width: number;
     height: number;
-    theme: {
-      background: string;
-      text: string;
-    }
+    theme: EmbeddedWebViewUIControllerTheme
   };
   global?: { [key: string]: unknown };
   enableCookie?: boolean;

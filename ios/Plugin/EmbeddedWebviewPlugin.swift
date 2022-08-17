@@ -2,14 +2,14 @@ import Foundation
 import Capacitor
 
 public struct EmbeddedWebviewConfigurationStyles {
-    var height: Int;
-    var width: Int;
+    let height: Int;
+    let width: Int;
 }
 
 public struct EmbeddedWebviewConfiguration {
-    var styles: EmbeddedWebviewConfigurationStyles
-    var enableCookie: Bool?
-    var globalVariables: JSObject?
+    let styles: EmbeddedWebviewConfigurationStyles
+    let enableCookie: Bool?
+    let globalVariables: JSObject?
 }
 
 /**
@@ -43,7 +43,7 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
             call.reject("[EmbeddedWebView] configuration.styles.height is undefined.")
             return nil
         }
-        
+
         let enableCookie = configuration["enableCookie"] as? Bool
         let globalVariables = configuration["global"] as? JSObject
         

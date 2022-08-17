@@ -4,6 +4,26 @@ import { isPlatform } from '@ionic/core';
 
 import { EmbeddedContentControllerModule } from '../lib/content-controller.module';
 
+export interface EmbeddedWebViewUIControllerTheme {
+  view: {
+    background: string;
+    text: string;
+  };
+  action: {
+    cancel: {
+      background: string;
+      text: string;
+    },
+    destructive: {
+      text: string;
+    },
+    default: {
+      text: string;
+    }
+  }
+}
+
+
 interface AndroidWebViewAlertFunctions {
   showAlert: (data: unknown) => unknown;
   showActionSheet: (data: string) => unknown;
@@ -26,13 +46,18 @@ export interface EmbeddedWebViewContentAlertAction {
   value: string;
   role: OverlayActionStyle;
 }
-export interface EmbeddedWebViewContentAlertOptions {
+export interface EmbeddedWebViewContentAlertOption {
   title: string;
   message: string;
+  theme: EmbeddedWebViewUIControllerTheme;
+  actions: EmbeddedWebViewContentAlertAction[];
+}
+export interface EmbeddedWebViewContentActionSheetOption {
+  theme: EmbeddedWebViewUIControllerTheme;
   actions: EmbeddedWebViewContentAlertAction[];
 }
 
-class WebViewOverlayService {
+class WebViewOverlayService<Option> {
   private readonly name: string;
   private readonly style: OverlayStyle;
   private readonly functionName: keyof AndroidWebViewAlertFunctions;
@@ -47,12 +72,12 @@ class WebViewOverlayService {
     this.functionName = functionName;
   }
 
-  present(alertOptions: EmbeddedWebViewContentAlertOptions) {
+  present(alertOption: Option) {
     if (isPlatform('ios')) {
-      this.presentOnIOS(alertOptions);
+      this.presentOnIOS(alertOption);
     }
     if (isPlatform('android')) {
-      this.presentOnAndroid(alertOptions);
+      this.presentOnAndroid(alertOption);
     }
   };
 
@@ -71,9 +96,9 @@ class WebViewOverlayService {
     return v;
   };
 
-  private presentOnIOS(alertOptions: EmbeddedWebViewContentAlertOptions) {
+  private presentOnIOS(alertOption: Option) {
     const options = JSON.stringify({
-      ...alertOptions,
+      ...alertOption,
       style: this.style,
       name: this.name,
     });
@@ -86,16 +111,16 @@ class WebViewOverlayService {
     window.dispatchEvent(event);
   }
 
-  private presentOnAndroid(alertOptions: EmbeddedWebViewContentAlertOptions) {
-    const options = JSON.stringify({ ...alertOptions,  name: this.name});
-    window.AndroidWebView[this.functionName](options);
+  private presentOnAndroid(alertOption: Option) {
+    const option = JSON.stringify({ ...alertOption,  name: this.name});
+    window.AndroidWebView[this.functionName](option);
   }
 }
 
 @Injectable({
   providedIn: EmbeddedContentControllerModule
 })
-export class WebViewActionSheet extends WebViewOverlayService {
+export class WebViewActionSheet extends WebViewOverlayService<EmbeddedWebViewContentActionSheetOption> {
   constructor() {
     super('action_sheet', OverlayStyle.ActionSheet,'showActionSheet');
   }
@@ -104,7 +129,7 @@ export class WebViewActionSheet extends WebViewOverlayService {
 @Injectable({
   providedIn: EmbeddedContentControllerModule
 })
-export class WebViewAlert extends WebViewOverlayService {
+export class WebViewAlert extends WebViewOverlayService<EmbeddedWebViewContentAlertOption> {
   constructor() {
     super('alert', OverlayStyle.Alert, 'showAlert');
   }

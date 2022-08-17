@@ -97,12 +97,20 @@ dismiss() => Promise<void>
 
 #### EmbeddedWebviewConfiguration
 
-| Prop               | Type                                                                                          |
-| ------------------ | --------------------------------------------------------------------------------------------- |
-| **`styles`**       | <code>{ width: number; height: number; theme: { background: string; text: string; }; }</code> |
-| **`global`**       | <code>{ [key: string]: unknown; }</code>                                                      |
-| **`enableCookie`** | <code>boolean</code>                                                                          |
-| **`css`**          | <code>string</code>                                                                           |
+| Prop               | Type                                                                                                                                     |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| **`styles`**       | <code>{ width: number; height: number; theme: <a href="#embeddedwebviewuicontrollertheme">EmbeddedWebViewUIControllerTheme</a>; }</code> |
+| **`global`**       | <code>{ [key: string]: unknown; }</code>                                                                                                 |
+| **`enableCookie`** | <code>boolean</code>                                                                                                                     |
+| **`css`**          | <code>string</code>                                                                                                                      |
+
+
+#### EmbeddedWebViewUIControllerTheme
+
+| Prop         | Type                                                                                                                        |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| **`view`**   | <code>{ background: string; text: string; }</code>                                                                          |
+| **`action`** | <code>{ cancel: { background: string; text: string; }; destructive: { text: string; }; default: { text: string; }; }</code> |
 
 
 #### EmbeddedWebviewVisibility
