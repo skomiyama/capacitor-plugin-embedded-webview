@@ -1,5 +1,18 @@
 ## Example 
 
+```scss
+// global.scss
+ion-app.ion-page {
+  background: transparent;
+  height: 100%;
+}
+
+.ion-page {
+  bottom: unset;
+  height: var(--embedded-content-height, 100vh);
+}
+```
+
 ```typescript
 import { Component } from '@angular/core';
 import { ModalController, ModalOptions } from '@ionic/angular';
