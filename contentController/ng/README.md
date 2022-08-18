@@ -3,7 +3,7 @@
 ```scss
 // global.scss
 ion-app.ion-page {
-  background: transparent;
+  background:   transparent;
   height: 100%;
 }
 

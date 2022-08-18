@@ -54,7 +54,7 @@ class FulscreenWebView: WKWebView {
                     self.webView.frame = frame
                 }
                 let script = """
-                window.dispatchEvent(new CustomEvent('set_native_modal_layout', null))
+                window.dispatchEvent(new CustomEvent('set_native_modal_layout', null));
                 """
                 self.webView.evaluateJavaScript(script)
             }
@@ -133,6 +133,8 @@ class FulscreenWebView: WKWebView {
         webView = FulscreenWebView(frame: self.webViewFrame, configuration: self.webViewConfiguration)
         webView.uiDelegate = self
         view = webView
+        
+        print("==== load view =====")
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -144,6 +146,12 @@ class FulscreenWebView: WKWebView {
     public func create() {
         let request = URLRequest(url: self.url)
         webView.load(request)
+    }
+    public func setPath(path: String) {
+        let script = """
+        window.dispatchEvent(new CustomEvent('embedded_content_navigation', { detail: { path: \(path) }}));
+        """
+        self.webView.evaluateJavaScript(script)
     }
     public func destroy() {
         self.dismiss(animated: false)

@@ -77,9 +77,23 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
 
             // FIXME: insert canOpenUrl()
             self.embeddedWebview.create()
+                
             call.resolve()
         }
     }
+    
+//    @objc func setPath(_ call:CAPPluginCall) -> Void {
+//        DispatchQueue.main.async {
+//            guard let path = call.getString("path") as String? else {
+//                call.reject("path is undefined")
+//                return
+//            }
+//
+//            self.embeddedWebview.setPath(path: path)
+//
+//            call.resolve()
+//        }
+//    }
     
     @objc func destroy(_ call:CAPPluginCall) -> Void {
         DispatchQueue.main.async {

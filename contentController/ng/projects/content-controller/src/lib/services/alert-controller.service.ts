@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { isPlatform } from '@ionic/core';
 
-import { EmbeddedContentControllerModule } from '../content-controller.module';
+import { EmbeddedContentModule } from '../content-controller.module';
 
 export interface EmbeddedWebViewUIControllerTheme {
   view: {
@@ -117,7 +117,7 @@ class WebViewOverlayService<Option> {
 }
 
 @Injectable({
-  providedIn: EmbeddedContentControllerModule
+  providedIn: EmbeddedContentModule
 })
 export class WebViewActionSheet extends WebViewOverlayService<EmbeddedWebViewContentActionSheetOption> {
   constructor() {
@@ -126,7 +126,7 @@ export class WebViewActionSheet extends WebViewOverlayService<EmbeddedWebViewCon
 }
 
 @Injectable({
-  providedIn: EmbeddedContentControllerModule
+  providedIn: EmbeddedContentModule
 })
 export class WebViewAlert extends WebViewOverlayService<EmbeddedWebViewContentAlertOption> {
   constructor() {

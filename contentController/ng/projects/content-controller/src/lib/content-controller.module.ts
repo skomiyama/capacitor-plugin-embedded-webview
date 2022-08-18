@@ -1,4 +1,18 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
-@NgModule()
-export class EmbeddedContentControllerModule {}
+interface ListenerOptions {
+  navigatingFunction: (path: string) => unknown;
+}
+
+@NgModule({
+  imports: [RouterModule]
+})
+export class EmbeddedContentModule {
+  listen(): ModuleWithProviders<EmbeddedContentModule> {
+    return {
+      ngModule: EmbeddedContentModule,
+      providers: []
+    };
+  }
+}
