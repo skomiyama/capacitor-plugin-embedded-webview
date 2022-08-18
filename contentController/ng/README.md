@@ -88,8 +88,7 @@ export class HomePage {
     const options: ModalOptions = {
       component: ModalContentPage
     };
-    const modal = await this.modalCtrl.create(options);
-    modal.present();
+    this.webViewModalCtrl.modal = await this.modalCtrl.create(options);
     this.webViewModalCtrl.present();
   }
 }
@@ -114,8 +113,7 @@ export class ModalContentPage implements OnInit {
   ngOnInit() {}
 
   async closeModal() {
-    this.webViewModalCtrl.dismiss();
-    this.modalCtrl.dismiss();
+    await this.webViewModalCtrl.dismiss();
   }
 }
 
