@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { isPlatform } from '@ionic/core';
 
-import { EmbeddedContentControllerModule } from '../lib/content-controller.module';
+import { EmbeddedContentControllerModule } from '../content-controller.module';
 
 export interface EmbeddedWebViewUIControllerTheme {
   view: {
@@ -22,7 +22,6 @@ export interface EmbeddedWebViewUIControllerTheme {
     }
   }
 }
-
 
 interface AndroidWebViewAlertFunctions {
   showAlert: (data: unknown) => unknown;

@@ -20,12 +20,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import {
-  EmbeddedWebView,
-  EmbeddedWebviewOptions,
-  EmbeddedWebviewConfiguration,
-  EmbeddedWebviewUIControllerTheme
-  } from '@skomiyama/embedded-webview';
+import { EmbeddedWebView, EmbeddedWebviewOptions, EmbeddedWebviewConfiguration } from '@skomiyama/embedded-webview';
 
 import ExploreContainer from '@/components/ExploreContainer.vue';
 
@@ -39,7 +34,7 @@ export default defineComponent({
   // },
   components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
   async mounted() {
-    const theme: EmbeddedWebviewUIControllerTheme = {
+     const theme = {
       view: {
         background: '#121212',
         text: '#ffffff',
@@ -50,16 +45,13 @@ export default defineComponent({
           text: '#ffffff'
         },
         default: {
-          background: '#222222',
           text: '#ffffff'
         },
         destructive: {
-          background: '#ff0000',
           text: '#ff000'
         }
       }
     }
-    
     const configuration: EmbeddedWebviewConfiguration = {
       styles: {
         width: (this.$el as HTMLElement).clientWidth,
@@ -74,8 +66,7 @@ export default defineComponent({
       }
     }
     const options: EmbeddedWebviewOptions = {
-      // url: 'http://localhost:3000',
-      url: 'https://fd47-2409-10-2500-3700-c4e2-483a-6942-dc54.jp.ngrok.io',
+      url: 'http://localhost:3000',
       configuration
     }
     await EmbeddedWebView.create(options);

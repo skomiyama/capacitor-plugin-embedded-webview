@@ -15,26 +15,52 @@ struct EmbeddedWebViewContentAlertOptions: Decodable {
     let name: String
     let actions: [EmbeddedWebViewContentAlertAction]
 }
+enum OverlayDiaplay: Int {
+    case fullscreen = 0
+    case contain = 1
+}
+struct EmbeddedWebViewContentModalOptions: Decodable {
+    let display: Int
+}
+
+class FulscreenWebView: WKWebView {
+    override var safeAreaInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+}
+
 
 @objc class EmbeddedWebView: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate {
     private var url: URL!
     private var webViewConfiguration: WKWebViewConfiguration!
     private var webViewFrame: CGRect!
     private var webView: WKWebView!
-
+    
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         let body = String(describing: message.body)
         let jsonData = body.data(using: .utf8)
-
+        
         switch message.name {
         case "dismissOverlay":
             self.webView.frame = self.webViewFrame
+            self.webView.isOpaque = true
             break
         case "showOverlay":
-            let frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-            self.webView.frame = frame
+            self.webView.isOpaque = false
+            
+            if let options = try? JSONDecoder().decode(EmbeddedWebViewContentModalOptions.self, from: jsonData!) {
+                if (OverlayDiaplay(rawValue: options.display) == .fullscreen) {
+                    let frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                    self.webView.frame = frame
+                }
+                let script = """
+                window.dispatchEvent(new CustomEvent('set_native_modal_layout', null))
+                """
+                self.webView.evaluateJavaScript(script)
+            }
             break
         case "showActionSheet", "showAlert":
+            print(body)
             if let options = try? JSONDecoder().decode(EmbeddedWebViewContentAlertOptions.self, from: jsonData!) {
                 let alert = createAlert(webView: self.webView, options: options)
                 self.present(alert, animated: true)
@@ -61,8 +87,8 @@ struct EmbeddedWebViewContentAlertOptions: Decodable {
     convenience init(url: String, configuration: EmbeddedWebviewConfiguration) {
         self.init(nibName:nil, bundle:nil)
         self.url = URL(string:url)
-        self.webViewConfiguration = self.createWebViewConfiguration(configuration: configuration)
         self.webViewFrame = CGRect(x: 0, y: 0, width: configuration.styles.width, height: configuration.styles.height)
+        self.webViewConfiguration = self.createWebViewConfiguration(configuration: configuration)
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -82,7 +108,10 @@ struct EmbeddedWebViewContentAlertOptions: Decodable {
         if (configuration.globalVariables != nil) {
             if let jsonData = self.encodeToJson(variables: configuration.globalVariables!) {
                 var scriptSource = "window.embedded_webview = " + jsonData + ";"
+                let height = Int(self.webViewFrame.height)
+                print(height)
                 scriptSource = scriptSource + """
+                    document.documentElement.style.setProperty('--embedded-content-height', '\(height)px');
                     window.addEventListener('send_message_to_webview', ($event) => {
                         window.webkit.messageHandlers[$event.detail.function].postMessage($event.detail.options)
                     });
@@ -101,8 +130,7 @@ struct EmbeddedWebViewContentAlertOptions: Decodable {
     }
     
     override func loadView() {
-        webView = WKWebView(frame: self.webViewFrame, configuration: self.webViewConfiguration)
-        webView.scrollView.contentInsetAdjustmentBehavior = .never
+        webView = FulscreenWebView(frame: self.webViewFrame, configuration: self.webViewConfiguration)
         webView.uiDelegate = self
         view = webView
     }
