@@ -251,12 +251,15 @@ class EmbeddedWebViewOverlay {
                 val width = Resources.getSystem().displayMetrics.widthPixels
                 val height = Resources.getSystem().displayMetrics.heightPixels
                 this.webView.layoutParams = RelativeLayout.LayoutParams(width, height)
+                this.webView.setBackgroundColor(Color.TRANSPARENT)
+                this.webView.evaluateJavascript("window.dispatchEvent(new CustomEvent('set_native_modal_layout', null))", null)
+
                 return@Runnable
             })
         }
 
         @JavascriptInterface
-        fun dismissModal(data: String) {
+        fun dismissModal() {
             this.activity.runOnUiThread(Runnable {
                 this.webView.layoutParams = this.defaultLayoutParams
                 return@Runnable

@@ -27,7 +27,7 @@ class EmbeddedWebView {
         webView.settings.javaScriptCanOpenWindowsAutomatically = true
 
 
-        webView.webViewClient = EmbeddedWebviewClient(configuration.globalVaribles)
+        webView.webViewClient = EmbeddedWebviewClient(configuration)
 
         webView.layoutParams = this.layoutParams()
     }
