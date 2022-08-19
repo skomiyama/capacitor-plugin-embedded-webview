@@ -97,12 +97,12 @@ dismiss() => Promise<void>
 
 #### EmbeddedWebviewConfiguration
 
-| Prop               | Type                                                       |
-| ------------------ | ---------------------------------------------------------- |
-| **`styles`**       | <code>{ width: number; height: number; theme: {}; }</code> |
-| **`global`**       | <code>{ [key: string]: unknown; }</code>                   |
-| **`enableCookie`** | <code>boolean</code>                                       |
-| **`css`**          | <code>string</code>                                        |
+| Prop               | Type                                            |
+| ------------------ | ----------------------------------------------- |
+| **`styles`**       | <code>{ width: number; height: number; }</code> |
+| **`global`**       | <code>{ [key: string]: unknown; }</code>        |
+| **`enableCookie`** | <code>boolean</code>                            |
+| **`css`**          | <code>string</code>                             |
 
 
 #### EmbeddedWebviewVisibility

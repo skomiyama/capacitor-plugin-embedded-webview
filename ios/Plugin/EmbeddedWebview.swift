@@ -157,3 +157,4 @@ class FulscreenWebView: WKWebView {
         view.isHidden = true
     }
 }
+    
