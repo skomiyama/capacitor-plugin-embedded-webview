@@ -56,7 +56,6 @@ export default defineComponent({
       styles: {
         width: (this.$el as HTMLElement).clientWidth,
         height: ((this.$el as HTMLElement).clientHeight),
-        theme
       },
       global: {
         parent: {
