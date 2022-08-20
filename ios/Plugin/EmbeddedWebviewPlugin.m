@@ -8,5 +8,6 @@ CAP_PLUGIN(EmbeddedWebviewPlugin, "EmbeddedWebView",
     CAP_PLUGIN_METHOD(dismiss, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(hide, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(show, CAPPluginReturnPromise);
-    CAP_PLUGIN_METHOD(navigate, CAPPluginReturnPromise);
+    CAP_PLUGIN_METHOD(pushTo, CAPPluginReturnPromise);
+
 )

@@ -35,7 +35,6 @@ export class WebViewModal {
 
   async present(options: ModalOption = { display: ModalDisplay.Fullscreen }): Promise<void> {
     if (isPlatform('ios')) {
-      console.log('present()')
       await this.presentModalOnIos(options);
     }
     if (isPlatform('android')) {
@@ -63,7 +62,6 @@ export class WebViewModal {
         }) as EventListener,
         undefined
       );
-      console.log('event');
 
       const event = new CustomEvent('send_message_to_webview', {
         detail: {

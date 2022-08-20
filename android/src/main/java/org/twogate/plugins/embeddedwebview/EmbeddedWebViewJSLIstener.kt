@@ -18,10 +18,11 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.getcapacitor.PluginCall
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 
-class EmbeddedWebViewOverlay {
+class EmbeddedWebViewJSListener {
     data class EmbeddedWebViewAlertThemeValue(
         val background: String,
         val text: String
@@ -72,13 +73,16 @@ class EmbeddedWebViewOverlay {
         }
     }
 
+    val hoge: String = "hogehoge";
+
     class JSEventListener(
         private val activity: Activity,
         private val context: Context,
         private val webView: WebView
     ) {
-        private val defaultLayoutParams: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(this.webView.layoutParams)
+        var completedEventMethod: (() -> Unit)? = null
 
+        private val defaultLayoutParams: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(this.webView.layoutParams)
 
         private fun generateButton(context: Context, text: String, role: EmbeddedWebViewContentAlertActionRole?, handler: () -> Any): Button {
             val barButton = Button(context)
@@ -264,6 +268,11 @@ class EmbeddedWebViewOverlay {
                 this.webView.layoutParams = this.defaultLayoutParams
                 return@Runnable
             })
+        }
+
+        @JavascriptInterface
+        fun completedEvent() {
+            completedEventMethod?.invoke()
         }
     }
 }

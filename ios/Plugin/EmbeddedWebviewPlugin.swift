@@ -1,5 +1,6 @@
 import Foundation
 import Capacitor
+import Combine
 
 public struct EmbeddedWebviewConfigurationStyles {
     let height: Int;
@@ -53,6 +54,7 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
             globalVariables: globalVariables
         )
     }
+
     
     @objc func create(_ call: CAPPluginCall) -> Void {
         DispatchQueue.main.async {
@@ -60,25 +62,28 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
                 call.reject("capacitor webview is null")
                 return
             }
-
             guard let url = call.getString("url") else {
                 call.reject("url is undefined")
                 return
             }
-            
+            let path = call.getString("path")
             guard let configuration = self.embeddedWebViewConfiguration(call: call) else {
                 call.reject("Failed to initialize configuration")
                 return
             }
 
             self.embeddedWebview = EmbeddedWebView(url: url, configuration: configuration)
-            
+        
             capWebview.addSubview(self.embeddedWebview.view)
-
-            // FIXME: insert canOpenUrl()
-            self.embeddedWebview.create()
-                
-            call.resolve()
+            
+            self.embeddedWebview.create {
+                if (path == nil) {
+                    call.resolve()
+                }
+                self.embeddedWebview.pushTo(path: path!) {
+                    call.resolve()
+                }
+            }
         }
     }
     
@@ -112,7 +117,7 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
                 call.resolve()
                 return
             }
-            self.bridge?.triggerWindowJSEvent(eventName: "show_embedded_view", data: "{ 'data': 'SHOW_EMBEDDED_VIEW' }")
+            self.bridge?.triggerWindowJSEvent(eventName: "show_embedded_view", data: "{ 'data': 'SHOW_EMBEDDED_     VIEW' }")
             self.embeddedWebview.show()
             call.resolve(["visibility": true])
         }
@@ -127,5 +132,24 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
             self.embeddedWebview.hide()
             call.resolve(["visibility": false])
         }
+    }
+    
+    @objc func pushTo(_ call: CAPPluginCall) -> Void {
+        DispatchQueue.main.async {
+            guard let path = call.getString("path") as String? else {
+                call.reject("path is undeinfed");
+                return;
+            }
+            
+            if (self.embeddedWebview == nil) {
+                call.reject("EmbeddedWebView is not initialized")
+                return;
+            }
+
+            self.embeddedWebview.pushTo(path: path) {
+                call.resolve()
+            }
+        }
+        
     }
 }

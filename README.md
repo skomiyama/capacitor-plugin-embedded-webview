@@ -17,6 +17,7 @@ npx cap sync
 * [`create(...)`](#create)
 * [`hide()`](#hide)
 * [`show()`](#show)
+* [`pushTo(...)`](#pushto)
 * [`dismiss()`](#dismiss)
 * [Interfaces](#interfaces)
 
@@ -75,6 +76,19 @@ show() => Promise<EmbeddedWebviewVisibility>
 --------------------
 
 
+### pushTo(...)
+
+```typescript
+pushTo(options: { path: string; }) => Promise<void>
+```
+
+| Param         | Type                           |
+| ------------- | ------------------------------ |
+| **`options`** | <code>{ path: string; }</code> |
+
+--------------------
+
+
 ### dismiss()
 
 ```typescript
@@ -92,25 +106,18 @@ dismiss() => Promise<void>
 | Prop                | Type                                                                                  |
 | ------------------- | ------------------------------------------------------------------------------------- |
 | **`url`**           | <code>string</code>                                                                   |
+| **`path`**          | <code>string</code>                                                                   |
 | **`configuration`** | <code><a href="#embeddedwebviewconfiguration">EmbeddedWebviewConfiguration</a></code> |
 
 
 #### EmbeddedWebviewConfiguration
 
-| Prop               | Type                                                                                                                                     |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| **`styles`**       | <code>{ width: number; height: number; theme: <a href="#embeddedwebviewuicontrollertheme">EmbeddedWebViewUIControllerTheme</a>; }</code> |
-| **`global`**       | <code>{ [key: string]: unknown; }</code>                                                                                                 |
-| **`enableCookie`** | <code>boolean</code>                                                                                                                     |
-| **`css`**          | <code>string</code>                                                                                                                      |
-
-
-#### EmbeddedWebViewUIControllerTheme
-
-| Prop         | Type                                                                                                                        |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| **`view`**   | <code>{ background: string; text: string; }</code>                                                                          |
-| **`action`** | <code>{ cancel: { background: string; text: string; }; destructive: { text: string; }; default: { text: string; }; }</code> |
+| Prop               | Type                                            |
+| ------------------ | ----------------------------------------------- |
+| **`styles`**       | <code>{ width: number; height: number; }</code> |
+| **`global`**       | <code>{ [key: string]: unknown; }</code>        |
+| **`enableCookie`** | <code>boolean</code>                            |
+| **`css`**          | <code>string</code>                             |
 
 
 #### EmbeddedWebviewVisibility

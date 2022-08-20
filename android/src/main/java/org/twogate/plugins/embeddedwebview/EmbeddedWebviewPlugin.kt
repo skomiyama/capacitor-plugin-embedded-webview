@@ -1,6 +1,7 @@
 package org.twogate.plugins.embeddedwebview
 
 import android.view.View
+import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.widget.RelativeLayout
 import com.getcapacitor.JSObject
@@ -14,6 +15,7 @@ import com.getcapacitor.annotation.CapacitorPlugin
 class EmbeddedWebViewPlugin : Plugin() {
     private lateinit var webView: WebView
     private lateinit var containerLayout: RelativeLayout
+    private lateinit var jsListener: EmbeddedWebViewJSListener.JSEventListener
 
     @PluginMethod
     fun create(call: PluginCall) {
@@ -41,7 +43,8 @@ class EmbeddedWebViewPlugin : Plugin() {
             this.webView = EmbeddedWebView(getBridge().context, configuration).webView
             this.webView.loadUrl(url)
 
-            this.webView.addJavascriptInterface(EmbeddedWebViewOverlay.JSEventListener(activity, this.webView.context, this.webView), "AndroidWebView")
+            this.jsListener = EmbeddedWebViewJSListener.JSEventListener(activity, this.webView.context, this.webView)
+            this.webView.addJavascriptInterface(this.jsListener, "AndroidWebView")
 
             this.containerLayout = RelativeLayout(getBridge().context)
             this.containerLayout.layoutParams =  RelativeLayout.LayoutParams(
@@ -96,4 +99,36 @@ class EmbeddedWebViewPlugin : Plugin() {
             return@Runnable
         })
     }
+
+    @JavascriptInterface
+    fun completedPushTo(call: PluginCall) {
+        activity.runOnUiThread(Runnable {
+            call.resolve()
+        })
+    }
+
+    @PluginMethod
+    fun pushTo(call: PluginCall) {
+        activity.runOnUiThread( Runnable {
+            if (this.webView == null) {
+                call.reject("EmbeddedWebView is not initialized")
+                return@Runnable
+            }
+
+            val path = call.getString("path")
+            if (path == null) {
+                call.reject("path is undefined")
+                return@Runnable
+            }
+
+            val script = "window.dispatchEvent(new CustomEvent('embedded_content_navigation', { detail: { path: '$path' } } ))"
+            this.webView.evaluateJavascript(script, { v: String -> println(v) })
+
+            this.jsListener.completedEventMethod = {
+                call.resolve()
+            }
+            return@Runnable
+        })
+    }
+
 }

@@ -10,6 +10,7 @@ export interface EmbeddedWebviewConfiguration {
 
 export interface EmbeddedWebviewOptions {
   url: string;
+  path?: string;
   configuration: EmbeddedWebviewConfiguration;
 }
 
@@ -18,6 +19,7 @@ export interface EmbeddedWebviewPlugin {
   create(options: EmbeddedWebviewOptions): Promise<void>;
   hide(): Promise<EmbeddedWebviewVisibility>;
   show(): Promise<EmbeddedWebviewVisibility>;
+  pushTo(options: { path: string }): Promise<void>;
   dismiss(): Promise<void>;
 }
 

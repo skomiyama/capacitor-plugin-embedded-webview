@@ -1,6 +1,7 @@
 import Foundation
 import Capacitor
 import WebKit
+import Combine
 
 struct EmbeddedWebViewContentAlertAction: Decodable {
     let title: String
@@ -35,6 +36,9 @@ class FulscreenWebView: WKWebView {
     private var webViewConfiguration: WKWebViewConfiguration!
     private var webViewFrame: CGRect!
     private var webView: WKWebView!
+    private var continuation: Void
+    private var loadedPage: (() -> Void)?
+    private var navigationEnd: (() -> Void)?
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         let body = String(describing: message.body)
@@ -60,12 +64,13 @@ class FulscreenWebView: WKWebView {
             }
             break
         case "showActionSheet", "showAlert":
-            print(body)
             if let options = try? JSONDecoder().decode(EmbeddedWebViewContentAlertOptions.self, from: jsonData!) {
                 let alert = createAlert(webView: self.webView, options: options)
                 self.present(alert, animated: true)
             }
             break
+        case "navigationEnd":
+            self.navigationEnd?()
         default:
             print("default")
         }
@@ -79,6 +84,13 @@ class FulscreenWebView: WKWebView {
            }
        }
        return nil
+    }
+    
+    // loaded page
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        if (self.loadedPage != nil) {
+            self.loadedPage!()
+        }
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -109,7 +121,6 @@ class FulscreenWebView: WKWebView {
             if let jsonData = self.encodeToJson(variables: configuration.globalVariables!) {
                 var scriptSource = "window.embedded_webview = " + jsonData + ";"
                 let height = Int(self.webViewFrame.height)
-                print(height)
                 scriptSource = scriptSource + """
                     document.documentElement.style.setProperty('--embedded-content-height', '\(height)px');
                     window.addEventListener('send_message_to_webview', ($event) => {
@@ -118,10 +129,11 @@ class FulscreenWebView: WKWebView {
                 """
                 let script = WKUserScript(source: scriptSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
                 let userContentController = WKUserContentController()
-                userContentController.add(self, name: "showOverlay")
-                userContentController.add(self, name: "dismissOverlay")
-                userContentController.add(self, name: "showAlert")
-                userContentController.add(self, name: "showActionSheet")
+                let userContentControllerFunctionNames = ["showOverlay", "dismissOverlay", "showAlert", "showActionSheet", "navigationEnd"]
+                for name in userContentControllerFunctionNames {
+                    userContentController.add(self, name: name)
+                }
+                
                 userContentController.addUserScript(script)
                 webViewConfiguration.userContentController = userContentController
             }
@@ -143,7 +155,8 @@ class FulscreenWebView: WKWebView {
         self.webView.navigationDelegate = self
     }
     
-    public func create() {
+    public func create(body: @escaping () -> Void) {
+        self.loadedPage = body
         let request = URLRequest(url: self.url)
         webView.load(request)
     }
@@ -164,4 +177,13 @@ class FulscreenWebView: WKWebView {
     public func hide() {
         view.isHidden = true
     }
+    
+    public func pushTo(path: String, callback: @escaping (() -> Void)) {
+        self.navigationEnd = callback
+        let script = """
+        window.dispatchEvent(new CustomEvent('embedded_content_navigation', { detail: { path: '\(path)' } } ))
+        """
+        self.webView.evaluateJavaScript(script)
+    }
 }
+    
