@@ -33,5 +33,10 @@ export class EmbeddedWebviewWeb
     console.log('DISMISS WEBVIEW');
     return;
   }
+
+  async pushTo(options: { path: string }): Promise<void> {
+    console.log('PUSH_TO', options);
+    return;
+  }
 }
   
