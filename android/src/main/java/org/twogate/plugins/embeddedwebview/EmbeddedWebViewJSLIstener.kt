@@ -79,7 +79,6 @@ class EmbeddedWebViewOverlay {
     ) {
         private val defaultLayoutParams: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(this.webView.layoutParams)
 
-
         private fun generateButton(context: Context, text: String, role: EmbeddedWebViewContentAlertActionRole?, handler: () -> Any): Button {
             val barButton = Button(context)
             var verticalPadding = 20
