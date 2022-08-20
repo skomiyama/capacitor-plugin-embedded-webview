@@ -2,28 +2,40 @@
   <div id="container">
     <strong>{{ name }}</strong>
     <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <ion-button @click="pushToEmbedPage($el ,'/tabs/tab2')">Push to second page</ion-button>
   </div>
 </template>
 
 <script lang="ts">
+import { useIonRouter } from '@ionic/vue';
+import { EmbeddedWebView } from '@skomiyama/embedded-webview';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ExploreContainer',
   props: {
-    name: String
+    name: String,
+  },
+  setup() {
+    const router = useIonRouter();
+    return {
+      pushToEmbedPage: async (el: HTMLElement, path: string) => {
+        await EmbeddedWebView.pushTo({ path: '/second' });
+        router.replace(path);
+      }
+    }
   }
 });
 </script>
 
 <style scoped>
 #container {
-  text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 #container strong {

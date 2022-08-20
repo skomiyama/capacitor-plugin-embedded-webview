@@ -17,6 +17,7 @@ npx cap sync
 * [`create(...)`](#create)
 * [`hide()`](#hide)
 * [`show()`](#show)
+* [`pushTo(...)`](#pushto)
 * [`dismiss()`](#dismiss)
 * [Interfaces](#interfaces)
 
@@ -75,6 +76,19 @@ show() => Promise<EmbeddedWebviewVisibility>
 --------------------
 
 
+### pushTo(...)
+
+```typescript
+pushTo(options: { path: string; }) => Promise<void>
+```
+
+| Param         | Type                           |
+| ------------- | ------------------------------ |
+| **`options`** | <code>{ path: string; }</code> |
+
+--------------------
+
+
 ### dismiss()
 
 ```typescript
@@ -92,6 +106,7 @@ dismiss() => Promise<void>
 | Prop                | Type                                                                                  |
 | ------------------- | ------------------------------------------------------------------------------------- |
 | **`url`**           | <code>string</code>                                                                   |
+| **`path`**          | <code>string</code>                                                                   |
 | **`configuration`** | <code><a href="#embeddedwebviewconfiguration">EmbeddedWebviewConfiguration</a></code> |
 
 

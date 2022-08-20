@@ -34,24 +34,6 @@ export default defineComponent({
   // },
   components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
   async mounted() {
-     const theme = {
-      view: {
-        background: '#121212',
-        text: '#ffffff',
-      },
-      action: {
-        cancel: {
-          background: '#242424',
-          text: '#ffffff'
-        },
-        default: {
-          text: '#ffffff'
-        },
-        destructive: {
-          text: '#ff000'
-        }
-      }
-    }
     const configuration: EmbeddedWebviewConfiguration = {
       styles: {
         width: (this.$el as HTMLElement).clientWidth,
@@ -65,16 +47,14 @@ export default defineComponent({
       }
     }
     const options: EmbeddedWebviewOptions = {
-      url: 'http://localhost:3000',
+      // url: 'http://localhost:3000',
+      url: 'https://2af2-2409-10-2500-3700-9574-1a4f-ef36-efea.jp.ngrok.io',
+      path: '/second',
       configuration
     }
     await EmbeddedWebView.create(options);
-
-    // initializedWebView = true
-    window.addEventListener('show_embedded_view', console.log);
   },
   async ionViewDidEnter() {
-    // if ()
     if (initializedWebView) {
       console.log(initializedWebView)
       console.log(await EmbeddedWebView.show());
