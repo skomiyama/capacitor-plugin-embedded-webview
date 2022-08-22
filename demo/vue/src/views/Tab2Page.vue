@@ -47,8 +47,7 @@ export default defineComponent({
       }
     }
     const options: EmbeddedWebviewOptions = {
-      // url: 'http://localhost:3000',
-      url: 'https://2af2-2409-10-2500-3700-9574-1a4f-ef36-efea.jp.ngrok.io',
+      url: 'http://localhost:3000',
       path: '/second',
       configuration
     }

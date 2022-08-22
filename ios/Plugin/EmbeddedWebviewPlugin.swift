@@ -79,9 +79,10 @@ public class EmbeddedWebviewPlugin: CAPPlugin {
             self.embeddedWebview.create {
                 if (path == nil) {
                     call.resolve()
-                }
-                self.embeddedWebview.pushTo(path: path!) {
-                    call.resolve()
+                } else {
+                    self.embeddedWebview.pushTo(path: path!) {
+                        call.resolve()
+                    }
                 }
             }
         }

@@ -24,11 +24,6 @@ struct EmbeddedWebViewContentModalOptions: Decodable {
     let display: Int
 }
 
-class FulscreenWebView: WKWebView {
-    override var safeAreaInsets: UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    }
-}
 
 
 @objc class EmbeddedWebView: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate {
@@ -142,11 +137,10 @@ class FulscreenWebView: WKWebView {
     }
     
     override func loadView() {
-        webView = FulscreenWebView(frame: self.webViewFrame, configuration: self.webViewConfiguration)
+        webView = WKWebView(frame: self.webViewFrame, configuration: self.webViewConfiguration)
         webView.uiDelegate = self
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         view = webView
-        
-        print("==== load view =====")
     }
 
     override func viewWillAppear(_ animated: Bool) {
