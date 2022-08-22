@@ -1,5 +1,6 @@
 ## Example 
 
+### styles
 ```scss
 // global.scss
 ion-app.ion-page {
@@ -13,6 +14,7 @@ ion-app.ion-page {
 }
 ```
 
+### overlay components
 ```typescript
 import { Component } from '@angular/core';
 import { ModalController, ModalOptions } from '@ionic/angular';
@@ -107,27 +109,16 @@ export class HomePage {
 }
 ```
 
+### routing
+
 ```typescript
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
-import { WebViewModal } from '@skomiyama/embedded-webview-controller';
-
-@Component({
-  selector: 'app-modal-content',
-  templateUrl: './modal-content.page.html',
-  styleUrls: ['./modal-content.page.scss'],
-})
-export class ModalContentPage implements OnInit {
+export class AppComponent {
   constructor(
-    private modalCtrl: ModalController,
-    private webViewModalCtrl: WebViewModal,
-  ) { }
-
-  ngOnInit() {}
-
-  async closeModal() {
-    await this.webViewModalCtrl.dismiss();
+    private embeddedWebViewNavigationService: EmbeddedContentNavigationService,
+    private router: Router,
+  ) {
+    const resolvePath = ($event: EmbeddedContentNavigationEvent) => this.router.navigate([$event.path]);
+    this.embeddedWebViewNavigationService.navigationEventListener(resolvePath).subscribe();
   }
 }
-
 ```
