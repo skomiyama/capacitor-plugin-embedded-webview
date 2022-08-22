@@ -30,6 +30,10 @@ export class WebViewModal {
     return this._modal;
   }
   set modal(modal: HTMLIonModalElement | undefined) {
+    modal?.onDidDismiss().then(async () => {
+      await this.dismissNativeModal();
+      this.modal = undefined;
+    });
     this._modal = modal;
   }
 
@@ -43,13 +47,7 @@ export class WebViewModal {
   }
 
   async dismiss(): Promise<void> {
-    if (isPlatform('ios')) {
-      await this.dismissOnIos();
-    }
-    if (isPlatform('android')) {
-      await this.dismissOnAndroid();
-    }
-    this.modal = undefined;
+    await this.modal?.dismiss();
   }
 
   private async setNativeModalLayout(options: ModalOption) {
@@ -85,13 +83,21 @@ export class WebViewModal {
     await this.setNativeModalLayout(options);
     await this.modal?.present();
   }
-  private async dismissOnIos(): Promise<void> {
-    await this.modal?.dismiss();
+
+  private async dismissNativeModal() {
+    if (isPlatform('ios')) {
+      this.dismissOnIos()
+    }
+    if (isPlatform('android')){
+      this.dismissOnAndroid()
+    }
+    this.modal = undefined;
+  }
+  private dismissOnIos(): void {
     const event = new CustomEvent('send_message_to_webview', { detail: { function: 'dismissOverlay'} });
     window.dispatchEvent(event);
   }
-  private async dismissOnAndroid(): Promise<void> {
-    await this.modal?.dismiss();
+  private dismissOnAndroid(): void {
     window.AndroidWebView.dismissModal();
   }
 }
