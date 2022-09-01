@@ -4,23 +4,26 @@ import android.net.http.SslError
 import android.webkit.SslErrorHandler
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.getcapacitor.JSObject
 
-class EmbeddedWebviewClient(configuration: EmbeddedWebViewConfiguration?) : WebViewClient() {
+class EmbeddedWebViewClient(configuration: EmbeddedWebViewConfiguration?, listener: KeyboardListener) : WebViewClient() {
     private val configuration: EmbeddedWebViewConfiguration?
+    private val keyboardListener: KeyboardListener
 
     init {
         this.configuration = configuration
+        this.keyboardListener = listener
     }
 
-    override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
-        view.loadUrl(url!!)
+    @Deprecated("Deprecated in Java")
+    override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+        view?.loadUrl(url!!)
         return true
     }
 
     override fun onPageFinished(view: WebView?, url: String?) {
         super.onPageFinished(view, url)
-        if (this.configuration != null) {
+        if (this.configuration != null) { // && url != view?.url && !alreadyPageLoaded) {
+            println("=== onPageFinished() === ${view?.url}")
             view?.evaluateJavascript("window.embedded_webview = ${this.configuration.globalVaribles.toString()}", null)
             view?.evaluateJavascript("document.documentElement.style.setProperty('--embedded-content-height', '${this.configuration.styles.height}px')", null)
         }

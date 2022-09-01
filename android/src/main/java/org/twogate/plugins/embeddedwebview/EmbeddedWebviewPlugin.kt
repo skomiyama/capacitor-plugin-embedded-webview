@@ -1,8 +1,15 @@
 package org.twogate.plugins.embeddedwebview
 
+import android.content.Context
+import android.content.res.Resources
+import android.graphics.Rect
+import android.inputmethodservice.Keyboard
 import android.view.View
+import android.view.ViewTreeObserver
+import android.view.WindowManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import com.getcapacitor.JSObject
 import com.getcapacitor.Plugin
@@ -13,7 +20,7 @@ import com.getcapacitor.annotation.CapacitorPlugin
 
 @CapacitorPlugin(name = "EmbeddedWebView")
 class EmbeddedWebViewPlugin : Plugin() {
-    private lateinit var webView: WebView
+    private lateinit var webView: EmbeddedWebView
     private lateinit var containerLayout: RelativeLayout
     private lateinit var jsListener: EmbeddedWebViewJSListener.JSEventListener
 
@@ -40,8 +47,9 @@ class EmbeddedWebViewPlugin : Plugin() {
 
         activity.runOnUiThread(Runnable {
             // Note: initialize webView here
-            this.webView = EmbeddedWebView(getBridge().context, configuration).webView
-            this.webView.loadUrl(url)
+            this.webView = EmbeddedWebViewContainer(activity, getBridge().context, configuration).webView
+            this.webView.webViewClient = EmbeddedWebViewClient(configuration, this.webView.keyboardListener)
+            this.webView.loadUrl(url)   
 
             this.jsListener = EmbeddedWebViewJSListener.JSEventListener(activity, this.webView.context, this.webView)
             this.webView.addJavascriptInterface(this.jsListener, "AndroidWebView")
@@ -122,7 +130,7 @@ class EmbeddedWebViewPlugin : Plugin() {
             }
 
             val script = "window.dispatchEvent(new CustomEvent('embedded_content_navigation', { detail: { path: '$path' } } ))"
-            this.webView.evaluateJavascript(script, { v: String -> println(v) })
+            this.webView.evaluateJavascript(script, null)
 
             this.jsListener.completedEventMethod = {
                 call.resolve()
@@ -132,3 +140,4 @@ class EmbeddedWebViewPlugin : Plugin() {
     }
 
 }
+

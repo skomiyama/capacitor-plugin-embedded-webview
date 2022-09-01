@@ -73,12 +73,12 @@ class EmbeddedWebViewJSListener {
         }
     }
 
-    val hoge: String = "hogehoge";
+    data class ContentConfiguration(val behaviour: Int)
 
     class JSEventListener(
         private val activity: Activity,
         private val context: Context,
-        private val webView: WebView
+        private val webView: EmbeddedWebView
     ) {
         var completedEventMethod: (() -> Unit)? = null
 
