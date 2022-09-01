@@ -149,7 +149,6 @@ class EmbeddedWebViewJSListener {
 
             val typedShapeValue = TypedValue()
             context.theme.resolveAttribute(R.attr.shapeAppearanceMediumComponent, typedShapeValue, true)
-            println(typedShapeValue.data);
 
             val layout = LinearLayout(context)
             layout.layoutParams = LinearLayout.LayoutParams(

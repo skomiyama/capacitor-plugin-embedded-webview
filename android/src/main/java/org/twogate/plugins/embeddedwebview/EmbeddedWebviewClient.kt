@@ -22,8 +22,7 @@ class EmbeddedWebViewClient(configuration: EmbeddedWebViewConfiguration?, listen
 
     override fun onPageFinished(view: WebView?, url: String?) {
         super.onPageFinished(view, url)
-        if (this.configuration != null) { // && url != view?.url && !alreadyPageLoaded) {
-            println("=== onPageFinished() === ${view?.url}")
+        if (this.configuration != null) {
             view?.evaluateJavascript("window.embedded_webview = ${this.configuration.globalVaribles.toString()}", null)
             view?.evaluateJavascript("document.documentElement.style.setProperty('--embedded-content-height', '${this.configuration.styles.height}px')", null)
         }

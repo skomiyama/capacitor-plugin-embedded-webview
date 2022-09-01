@@ -13,7 +13,6 @@ class EmbeddedWebView: WebView {
     val keyboardListener: KeyboardListener
 
     constructor(context: Context, activity: AppCompatActivity) : super(context) {
-        println("embeddedWebView constructor() ")
         this.keyboardListener = KeyboardListener(activity, this)
         keyboardListener.listen()
     }
