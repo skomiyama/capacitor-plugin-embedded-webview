@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { isPlatform } from '@ionic/core';
 
-import { EmbeddedContentControllerModule } from '../content-controller.module';
+import { EmbeddedWebViewControllersModule } from './controllers.module';
 
 declare const window: Window & {
   AndroidWebView: AndroidWebViewModalFunctions;
@@ -21,7 +21,7 @@ interface AndroidWebViewModalFunctions {
 };
 
 @Injectable({
-  providedIn: EmbeddedContentControllerModule
+  providedIn: EmbeddedWebViewControllersModule
 })
 export class WebViewModal {
 

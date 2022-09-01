@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { isPlatform } from '@ionic/core';
 import { Observable } from 'rxjs';
 
-import { EmbeddedContentControllerModule } from '../content-controller.module';
+import { EmbeddedWebViewControllersModule } from './controllers.module';
 
 export interface EmbeddedContentNavigationEvent {
   path: string;
@@ -19,10 +19,9 @@ declare const window: Window & {
 };
 
 @Injectable({
-  providedIn: EmbeddedContentControllerModule
+  providedIn: EmbeddedWebViewControllersModule
 })
 export class EmbeddedContentNavigationService {
-
   async notifyEvent(functionName: string, options?: unknown): Promise<void> {
     new Promise<void>((resolve) => {
       const event = new CustomEvent('send_message_to_webview', {

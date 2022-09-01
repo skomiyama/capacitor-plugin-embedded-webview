@@ -4,7 +4,7 @@
   "peerDependencies": {
     "@angular/common": "^14.1.0",
     "@angular/core": "^14.1.0",
-    "@ionic/core": "^6.2.2"
+    "@ionic/core": "^6.2.3"
   },
   "dependencies": {
     "tslib": "^2.3.0"
