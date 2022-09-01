@@ -25,6 +25,5 @@ export class EmbeddedTabService {
     public async create() {
         await EmbeddedWebView.create(this.options)
         this.initialized = true;
-        window.addEventListener('show_embedded_view', console.log);
     }
 }
