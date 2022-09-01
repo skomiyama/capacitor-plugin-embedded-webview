@@ -24,6 +24,13 @@ struct EmbeddedWebViewContentModalOptions: Decodable {
     let display: Int
 }
 
+enum ShowKeyboardBehaviour: Int, Decodable {
+    case scrollUp = 0
+    case none = 1
+}
+struct ContentConfiguration: Decodable {
+        let behaviour: Int
+}
 
 
 @objc class EmbeddedWebView: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate {
@@ -34,6 +41,7 @@ struct EmbeddedWebViewContentModalOptions: Decodable {
     private var continuation: Void
     private var loadedPage: (() -> Void)?
     private var navigationEnd: (() -> Void)?
+    private var scrollBehaviour: ShowKeyboardBehaviour = .scrollUp
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         let body = String(describing: message.body)
@@ -66,6 +74,11 @@ struct EmbeddedWebViewContentModalOptions: Decodable {
             break
         case "navigationEnd":
             self.navigationEnd?()
+        case "setContentConfiguration":
+            if let options = try? JSONDecoder().decode(ContentConfiguration.self, from: jsonData!) {
+                self.scrollBehaviour = ShowKeyboardBehaviour(rawValue: options.behaviour)!
+            }
+            break
         default:
             print("default")
         }
@@ -86,6 +99,34 @@ struct EmbeddedWebViewContentModalOptions: Decodable {
         if (self.loadedPage != nil) {
             self.loadedPage!()
         }
+    }
+    
+    @objc func keyboardWillShow(notification: Notification) {
+        if let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
+            if (self.scrollBehaviour == .none) {
+                let tabHeight = UIScreen.main.bounds.height - self.webView.frame.height
+                let script = """
+                window.dispatchEvent(new CustomEvent('embedded_webview_keyboard_will_show', { detail: { keyboardHeight: { current: 0, next: \(keyboardHeight - tabHeight) }, type: "show"  }}));
+                """
+                self.webView.evaluateJavaScript(script)
+                self.webView.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0 - keyboardHeight, right: 0)
+            }
+       }
+    }
+    @objc func keyboardWillHide(notification: Notification) {
+        if (self.scrollBehaviour == .none) {
+            let scroillViewInsetBottom = self.webView.scrollView.contentInset.bottom
+            let script = """
+            window.dispatchEvent(new CustomEvent('embedded_webview_keyboard_will_hide', { detail: { keyboardHeight: { current: \(scroillViewInsetBottom), next: 0 }, type: "hide"  }}));
+            """
+            self.webView.evaluateJavaScript(script)
+            self.webView.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        }
+    }
+    func registerKeyboardEvents() {
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -124,7 +165,7 @@ struct EmbeddedWebViewContentModalOptions: Decodable {
                 """
                 let script = WKUserScript(source: scriptSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
                 let userContentController = WKUserContentController()
-                let userContentControllerFunctionNames = ["showOverlay", "dismissOverlay", "showAlert", "showActionSheet", "navigationEnd"]
+                let userContentControllerFunctionNames = ["showOverlay", "dismissOverlay", "showAlert", "showActionSheet", "navigationEnd", "setContentConfiguration"]
                 for name in userContentControllerFunctionNames {
                     userContentController.add(self, name: name)
                 }
@@ -141,6 +182,7 @@ struct EmbeddedWebViewContentModalOptions: Decodable {
         webView.uiDelegate = self
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         view = webView
+        self.registerKeyboardEvents()
     }
 
     override func viewWillAppear(_ animated: Bool) {
