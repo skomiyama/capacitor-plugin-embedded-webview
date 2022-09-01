@@ -1,0 +1,13 @@
+:root {
+  --ion-safe-area-bottom: 0 !important;
+}
+
+ion-app.ion-page {
+  background: transparent;
+  height: 100%;
+}
+
+.ion-page {
+  bottom: unset;
+  height: var(--embedded-content-height, 100vh);
+}

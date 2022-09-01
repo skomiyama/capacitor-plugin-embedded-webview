@@ -1,6 +1,10 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/content-controller",
+  "assets": [
+    "./schematics/",
+    "./styles/ionic-app.css"
+  ],
   "lib": {
     "entryFile": "src/public-api.ts"
   }
