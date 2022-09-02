@@ -3,8 +3,14 @@
 
 ### Installation
 ```
-$ ng add @skomiyama/embedded-webview-controller
+$ ng add @skomiyama/embedded-webview-controller --project <projectName> --global-style-path <globalStylePath>
 ```
+| ng-add options | type | description | required |
+| --- | --- | --- | --- |
+| project | string | project name in angular.json. default value is defaultProject in angular.json. | optional |
+| global-style-path | string | global sass file path, default value is `src/global.scss` | optional |
+
+
 
 ### overlay components
 ```typescript
