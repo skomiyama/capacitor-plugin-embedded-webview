@@ -24,7 +24,6 @@ interface AndroidWebViewModalFunctions {
   providedIn: EmbeddedWebViewControllersModule
 })
 export class WebViewModal {
-
   private _modal?: HTMLIonModalElement;
   get modal(): HTMLIonModalElement | undefined {
     return this._modal;
@@ -46,8 +45,8 @@ export class WebViewModal {
     }
   }
 
-  async dismiss(): Promise<void> {
-    await this.modal?.dismiss();
+  async dismiss(data?: any, role?: string): Promise<void> {
+    await this.modal?.dismiss(data, role);
   }
 
   private async setNativeModalLayout(options: ModalOption) {
