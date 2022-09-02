@@ -1,6 +1,6 @@
 {
-  "name": "ng",
-  "version": "0.0.9",
+  "name": "@skomiyama/embedded-webview-controller",
+  "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

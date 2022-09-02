@@ -1,17 +1,9 @@
 ## Example 
 
-### styles
-```scss
-// global.scss
-ion-app.ion-page {
-  background:   transparent;
-  height: 100%;
-}
 
-.ion-page {
-  bottom: unset;
-  height: var(--embedded-content-height, 100vh);
-}
+### Installation
+```
+$ ng add @skomiyama/embedded-webview-controller
 ```
 
 ### overlay components
@@ -122,3 +114,32 @@ export class AppComponent {
   }
 }
 ```
+
+### keyboard scroll behaviour
+```html
+<!-- footer -->
+<ion-footer>
+  <ion-toolbar>
+    <embedded-webview-footer-inner>
+      <ion-input placeholder="input..."></ion-input>
+    </embedded-webview-footer-inner>
+  </ion-toolbar>
+</ion-footer>
+```
+
+```typescript
+// KeyboardScrollBehaviour is supported only iOS
+  constructor(
+    private embeddedContentConfiguration: EmbeddedContentConfiguration,
+  ) {}
+
+  setScrollBehaviour() {
+    const behaviour = KeyboardScrollBehaviour.None;
+    this.embeddedContentConfiguration.setKeyboardScrollBehaviour({ behaviour });
+  }
+```
+| KeyboardScrollBehaviour  | Value Type |
+| --- | --------- |
+| ScrollUp  | when textfield was focused, scroll webview up |
+| none | no scrolling when focused |
+
