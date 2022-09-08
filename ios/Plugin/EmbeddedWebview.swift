@@ -98,6 +98,7 @@ struct ContentConfiguration: Decodable {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         if (self.loadedPage != nil) {
             self.loadedPage!()
+            self.webView.evaluateJavaScript("window.dispatchEvent(new CustomEvent('initialized_global_variables'))")
         }
     }
     

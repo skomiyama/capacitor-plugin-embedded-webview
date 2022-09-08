@@ -1,5 +1,6 @@
 package org.twogate.plugins.embeddedwebview
 
+import android.graphics.Bitmap
 import android.net.http.SslError
 import android.webkit.SslErrorHandler
 import android.webkit.WebView
@@ -20,11 +21,16 @@ class EmbeddedWebViewClient(configuration: EmbeddedWebViewConfiguration?, listen
         return true
     }
 
+    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+        super.onPageStarted(view, url, favicon)
+    }
+
     override fun onPageFinished(view: WebView?, url: String?) {
         super.onPageFinished(view, url)
         if (this.configuration != null) {
             view?.evaluateJavascript("window.embedded_webview = ${this.configuration.globalVaribles.toString()}", null)
             view?.evaluateJavascript("document.documentElement.style.setProperty('--embedded-content-height', '${this.configuration.styles.height}px')", null)
+            view?.evaluateJavascript("window.dispatchEvent(new CustomEvent('initialized_global_variables'))", null)
         }
     }
 

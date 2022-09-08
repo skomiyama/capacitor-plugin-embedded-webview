@@ -1,0 +1,13 @@
+arguments=--init-script /var/folders/qc/zt0x2pkn7wbb_ynmmpqb7t3m0000gn/T/init8750243389413272669.gradle --init-script /var/folders/qc/zt0x2pkn7wbb_ynmmpqb7t3m0000gn/T/init9488041522574790967.gradle
+auto.sync=false
+build.scans.enabled=false
+connection.gradle.distribution=GRADLE_DISTRIBUTION(WRAPPER)
+connection.project.dir=
+eclipse.preferences.version=1
+gradle.user.home=
+java.home=/Applications/Android Studio.app/Contents/jre/Contents/Home
+jvm.arguments=
+offline.mode=false
+override.workspace.settings=true
+show.console.view=true
+show.executions.view=true
